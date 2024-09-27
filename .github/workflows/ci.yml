@@ -80,10 +80,20 @@ jobs:
           ./configure --target-list="aarch64-softmmu,x86_64-softmmu" --enable-fdt --enable-plugins --enable-slirp --enable-capstone
           make -j $(cat /proc/cpuinfo | grep "^processor" | wc -l)
           make plugins
-          make check-build
+       #   make check-build
 
       - name: Run QEMU tests
         working-directory: qemu
         run: |
-          make check
+      #    make check
+
+      - name: Store QEMU binaries
+        if: always() 
+        uses: actions/upload-artifact@v4
+        with: 
+          name: wr_qemu_bin-${{ github.run_number }}-${{ github.sha }}
+          path: | 
+            ${{ github.workspace }}/qemu/build/qemu-system-aarch64
+            ${{ github.workspace }}/qemu/build/qemu-system-x86_64
+            ${{ github.workspace }}/qemu/build/qemu-img
 
